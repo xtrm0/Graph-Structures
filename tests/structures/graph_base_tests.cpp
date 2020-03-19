@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include "structures/baseutils/assertions.hpp"
 #include "structures/graph/edge_list.hpp"
 #include "structures/graph/adjacency_list.hpp"
 #include "structures/graph/adjacency_matrix.hpp"

@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <structures/baseutils/assertions.hpp>
 #include "structures/graph/edge_list.hpp"
 #include "algorithms/mincut/karger.hpp"
 #include "algorithms/mincut/kargerStein.hpp"

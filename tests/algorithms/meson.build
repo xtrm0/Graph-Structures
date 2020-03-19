@@ -12,7 +12,8 @@
 
 tests_src = [
   'mincut.cpp',
-]  
+]
+project_test_sources += tests_src
 gtest_algorithms = executable(
   'gtest_algorithms',
   tests_src,

@@ -11,9 +11,9 @@
 # test('Structures gtest 1', 'test')
 
 tests_src = [
-  'hello_test.cpp',
-  'graph_base_tests.cpp'
-]  
+  'graph_base_tests.cpp',
+]
+project_test_sources += tests_src
 gtest_structures = executable(
   'gtest_structures',
   tests_src,

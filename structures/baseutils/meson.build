@@ -1,1 +1,2 @@
-install_headers('assertions.hpp')
+#install_headers('assertions.hpp')
+project_headers += files('assertions.hpp')

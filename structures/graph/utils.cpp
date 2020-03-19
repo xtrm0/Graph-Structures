@@ -20,15 +20,19 @@ AdjacencyList ReadGraphAsAdjacencyList() {
 AdjacencyMatrix ReadGraphAsAdjacencyMatrix() {
   AdjacencyMatrix ret;
   cin >> ret.N >> ret.E;
-  assert( 0 <= ret.N );
-  assert( 0 <= ret.E );
+  // UNDONE(gcc-pragma-bug): assert( 0 <= ret.N );
+  // UNDONE(gcc-pragma-bug): assert( 0 <= ret.E );
   
   for (NodeId i=0; i<ret.N; i++) ret.matrix.push_back(vector<bool>(ret.N,false));
   for (NodeId i=0; i<ret.E; i++) {
     NodeId a,b;
     cin >> a >> b;
-    assert(0 <= a && a <= ret.N);
-    assert(0 <= b && b <= ret.N);
+      ASSERT(static_cast<NodeId>(-1) != a);
+      // UNDONE(gcc-pragma-bug): ASSERT(0 <= a);
+      ASSERT(a <= ret.N);
+      ASSERT(static_cast<NodeId>(-1) != b);
+      // UNDONE(gcc-pragma-bug): ASSERT(0 <= b)
+      ASSERT(b <= ret.N);
     ret.matrix[a][b] = true;
   }
   

@@ -13,8 +13,12 @@ protected:
   Graph() : N(0), E(0) {;}
   Graph(uint64_t N, vector<Edge> edges) : N(N), E(edges.size()){
     for (const Edge& edge : edges) {
-      ASSERT(0 <= edge.u && edge.u <= N);
-      ASSERT(0 <= edge.v && edge.v <= N);
+      ASSERT(static_cast<NodeId>(-1) != edge.u);
+      // UNDONE(gcc-pragma-bug): ASSERT(0 <= edge.u);
+      ASSERT(edge.u <= N);
+      ASSERT(static_cast<NodeId>(-1) != edge.v);
+      // UNDONE(gcc-pragma-bug): ASSERT(0 <= edge.v)
+      ASSERT(edge.v <= N);
     }
   }
 

@@ -37,3 +37,6 @@ public:
     return ret;
   }
 };
+
+// Compiled in utils.cpp
+EdgeList ReadGraphAsEdgeList();

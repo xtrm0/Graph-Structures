@@ -1,3 +1,3 @@
 # Header files:
-install_headers('karger.hpp')
-install_headers('kargerStein.hpp')
+project_headers += files('karger.hpp')
+project_headers += files('kargerStein.hpp')

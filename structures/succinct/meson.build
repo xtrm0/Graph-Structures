@@ -1,4 +1,4 @@
-install_headers('bitset.hpp')
-install_headers('run_length_encoding.hpp')
-install_headers('ufds.hpp')
+project_headers += files('bitset.hpp')
+project_headers += files('run_length_encoding.hpp')
+project_headers += files('ufds.hpp')
 
