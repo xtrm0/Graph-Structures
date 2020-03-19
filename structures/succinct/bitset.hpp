@@ -2,6 +2,4 @@
 
 #include <bitset>
 
-struct Bitset {
-
-};
+struct Bitset {};

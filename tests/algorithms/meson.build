@@ -10,9 +10,9 @@
 # GUnit deterministic tests:
 # test('Structures gtest 1', 'test')
 
-tests_src = [
+tests_src = files(
   'mincut.cpp',
-]
+)
 project_test_sources += tests_src
 gtest_algorithms = executable(
   'gtest_algorithms',

@@ -27,14 +27,13 @@ add_global_arguments('-Wall', '-Wextra', '-Wunused',
                      '-Werror', '-O3', '-Ofast',
                      # UNDONE: upgrade to packages or create source files
                      '-Wno-missing-declarations',
-  #                   libs_compiler,
+                     libs_compiler,
                      language: 'cpp')
 
 # for tests:
 add_global_arguments('-Wno-gnu-zero-variadic-macro-arguments', language: 'cpp')
 
-add_global_link_arguments(#libs_linker, 
-language: 'cpp')
+add_global_link_arguments(libs_linker, language: 'cpp')
 
 # External dependencies:
 gtest = subproject('gtest', version : '1.10.0')
@@ -50,7 +49,7 @@ subdir('structures')
 subdir('algorithms')
 
 # Executables:
-main_sources = [files('main.cpp')]
+main_sources = files('main.cpp')
 project_sources += main_sources
 
 main_exec = executable('main', main_sources,
@@ -72,10 +71,10 @@ run_target('format',
 
 # This regex excludes any sources from the third_party, tests, benchmarks 
 # and gtest related files.
-regex = '^((?!(third_party|tests|benchmarks|gtest)).)*$'
+regex = '^((?!(third_party|tests|benchmarks|gtest|subprojects)).)*$'
 # This adds clang tidy support
 configure_file(input : '.clang-tidy',
                output : '.clang-tidy',
                copy : true)
 run_target('tidy',
-  command : ['run-clang-tidy.py','-fix', '-j' , '8', 'files', regex ,'-format', '-p='+ meson.build_root()])
+  command : ['run-clang-tidy','-fix', '-j' , '8', 'files', regex ,'-format', '-p='+ meson.build_root()])

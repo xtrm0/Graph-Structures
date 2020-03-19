@@ -8,7 +8,8 @@ Edit main.cpp
 
 ### Compile: 
 ```
-meson ./build
+meson ./build # First time only
+ninja -C ./build
 ```
 
 ### Structures
@@ -21,4 +22,16 @@ meson ./build
 ```
 cd build
 meson wrap install gtest
+```
+
+### Run tests:
+```
+ninja -C ./build test
+```
+
+### Before commiting, format and test:
+```
+ninja -C ./build format
+ninja -C ./build tidy
+ninja -C ./build test
 ```
