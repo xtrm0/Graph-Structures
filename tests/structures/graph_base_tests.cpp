@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
+#include "structures/graph/edge_list.hpp"
 #include "structures/graph/adjacency_list.hpp"
 #include "structures/graph/adjacency_matrix.hpp"
 #include "structures/graph/compressed_sparse_rows.hpp"
+
 #include <gtest/gtest.h>
 
 #ifndef GTEST_HAS_TYPED_TEST
@@ -55,12 +57,15 @@ struct BaseGraphTests : public testing::Test {
   NodeId E;
 };
 using GraphImplementations = ::testing::Types<
+BGT_GEN<EdgeList,0>,
 BGT_GEN<AdjacencyList,0>,
 BGT_GEN<AdjacencyMatrix,0>,
 BGT_GEN<CSRGraph,0>,
+BGT_GEN<EdgeList,1>,
 BGT_GEN<AdjacencyList,1>,
 BGT_GEN<AdjacencyMatrix,1>,
 BGT_GEN<CSRGraph,1>,
+BGT_GEN<EdgeList,2>,
 BGT_GEN<AdjacencyList,2>,
 BGT_GEN<AdjacencyMatrix,2>,
 BGT_GEN<CSRGraph,2> >;

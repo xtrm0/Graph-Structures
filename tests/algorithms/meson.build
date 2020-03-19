@@ -11,15 +11,14 @@
 # test('Structures gtest 1', 'test')
 
 tests_src = [
-  'hello_test.cpp',
-  'graph_base_tests.cpp'
+  'mincut.cpp',
 ]  
-gtest_structures = executable(
-  'gtest_structures',
+gtest_algorithms = executable(
+  'gtest_algorithms',
   tests_src,
   include_directories : inc,
   dependencies : [
     gtest_dep,
     gmock_dep],
 )    
-test('gtest tests/structures', gtest_structures, timeout: 1)
+test('gtest tests/algorithm', gtest_algorithms)

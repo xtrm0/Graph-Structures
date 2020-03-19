@@ -57,9 +57,9 @@ public:
     uint64_t ret = 0;
     ret += 2*sizeof(uint64_t); //N,E
     ret += sizeof(vector<vector<NodeId>>);
-    ret += N * sizeof(vector<NodeId>);
+    ret += adjlist.capacity() * sizeof(vector<NodeId>);
     for (NodeId i=0; i<N; i++) {
-      ret += adjlist[i].size() * sizeof(NodeId);
+      ret += adjlist[i].capacity() * sizeof(NodeId);
     }   
     return ret;
   }

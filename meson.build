@@ -14,6 +14,7 @@ inc = include_directories('./')
 
 # Subdirs:
 subdir('structures')
+subdir('algorithms')
 
 # Executables:
 main_sources = ['main.cpp']
@@ -23,5 +24,6 @@ main_exec = executable('main', main_sources,
                     install : true,
 #                    link_with: graph_utils_lib
                     )
-test('main test', main_exec)
+
+# test('main test', main_exec)
 subdir('tests')

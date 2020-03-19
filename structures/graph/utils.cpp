@@ -2,6 +2,7 @@
 #include "adjacency_list.hpp"
 #include "adjacency_matrix.hpp"
 #include "compressed_sparse_rows.hpp"
+#include "edge_list.hpp"
 
 AdjacencyList ReadGraphAsAdjacencyList() {
   AdjacencyList ret;
@@ -45,4 +46,17 @@ CSRGraph ReadGraphAsCSR() {
     edges.push_back({a,b});
   }  
   return CSRGraph(N, edges);
+}
+
+EdgeList ReadGraphAsEdgeList() {
+  NodeId N, E;
+  vector<Edge> edges;
+  cin >> N >> E;
+  for (NodeId i=0; i<E; i++) {
+    NodeId a,b;
+    cin >> a >> b;
+    a--; b--;
+    edges.push_back({a,b});
+  }  
+  return EdgeList(N, edges);
 }
