@@ -88,6 +88,8 @@ matrix:
     #     - meson
     #     - ninja
     
+    
+    # UNDONE: clang-tidy job is not working as intended
     - name: "clang tidy"
       env:
         CXX=clang++-9

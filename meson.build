@@ -10,6 +10,7 @@ project('fastnet', 'cpp',
 project_sources = []
 project_headers = []
 project_test_sources = []
+project_benchmark_sources = []
 
 compiler = meson.get_compiler('cpp')
 warning_level = get_option('warning_level').to_int()
@@ -35,9 +36,6 @@ add_global_arguments('-Wno-gnu-zero-variadic-macro-arguments', language: 'cpp')
 
 add_global_link_arguments(libs_linker, language: 'cpp')
 
-# External dependencies:
-gtest = subproject('gtest', version : '1.10.0')
-
 # Actual instantiation of external dependencies:
 subdir('third_party')
 
@@ -60,6 +58,7 @@ main_exec = executable('main', main_sources,
 
 # test('main test', main_exec, timeout: 1)
 subdir('tests')
+subdir('benchmarks')
 
 # This adds the clang format file to the build directory
 configure_file(input : '.clang-format',
