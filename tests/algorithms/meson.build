@@ -17,6 +17,7 @@ project_test_sources += tests_src
 gtest_algorithms = executable(
   'gtest_algorithms',
   tests_src,
+  cpp_args: '-Wno-sign-compare',
   include_directories : inc,
   dependencies : [
     gtest_dep,

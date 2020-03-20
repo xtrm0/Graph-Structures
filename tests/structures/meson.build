@@ -18,6 +18,7 @@ gtest_structures = executable(
   'gtest_structures',
   tests_src,
   include_directories : inc,
+  cpp_args: '-Wno-sign-compare',
   dependencies : [
     gtest_dep,
     gmock_dep],

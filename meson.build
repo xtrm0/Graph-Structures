@@ -54,7 +54,6 @@ project_sources += main_sources
 
 main_exec = executable('main', main_sources,
                     include_directories : inc,
-#                     dependencies : glib_dep,
                     install : true,
                     link_with: graph_utils_lib
                     )
@@ -65,7 +64,7 @@ subdir('tests')
 # This adds the clang format file to the build directory
 configure_file(input : '.clang-format',
                output : '.clang-format',
-	       copy: true)
+      	       copy: true)
 run_target('format',
   command : ['clang-format','-i','-style=file',project_sources,project_test_sources,project_headers])
 

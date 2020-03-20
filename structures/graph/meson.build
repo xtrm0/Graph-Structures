@@ -13,5 +13,4 @@ project_sources += graph_utils_sources
 graph_utils_lib = library('graph_utils',
                         graph_utils_sources,
                         include_directories : inc,
-#                        dependencies : glib_dep,
                         install : true)
