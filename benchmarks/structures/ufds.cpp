@@ -1,63 +1,45 @@
- 
+#include "structures/succinct/ufds.hpp" 
 #include "benchmark/benchmark.h"
+#include "benchmarks/util/benchmark_assertions.hpp"
 #include <math.h>
+using std::vector;
+using std::tuple;
 
-int foo(int w) {
-    int k=0;
-    for (int i=0; i<w; i++) {
-        k += (w + k*k + i*2 + 7 - i*k) / 8;
+int ufds_do_ops(int N, vector<tuple<bool,int,int> >& ops) {
+  DisjointSet ds(N);
+  int cnt = 0;
+  for (auto&& [isJoin, i, j] : ops) {
+    if (isJoin) {
+      ds.Union(i,j);
+    } else {
+      if (ds.AreConnected(i,j)) {
+        cnt++;
+      }
     }
-    return k;
+  }
+  return cnt;
 }
 
-static void BM_FOO(benchmark::State &state) {
-  for (auto _ : state) benchmark::DoNotOptimize(foo(state.range(0)));
-   state.SetComplexityN(state.range(0));
-}
+static void BM_UDFS(benchmark::State &state) {
+  int opsCnt = state.range(0);
+  int N = int(opsCnt/100) + 1;
 
-BENCHMARK(BM_FOO)
-    ->RangeMultiplier(2)->Range(1<<0, 1<<16)->Complexity();
-    
-BENCHMARK(BM_FOO)
-    ->RangeMultiplier(2)->Range(1<<0, 1<<18)->Complexity(benchmark::oN);
-
-
-
-int foo2(int w) {
-    int k=0;
-    for (int i=0; i<w; i++) {
-        k += foo(w);
+  vector<tuple<bool,int,int> > ops;  
+  for (auto _ : state) {
+    state.PauseTiming();
+    ops.clear();
+    for (int i=0; i<opsCnt; i++) {
+      ops.push_back(make_tuple<>(random()%2==0, random()%N, random()%N));
     }
-    return k;
+    state.ResumeTiming();
+    benchmark::DoNotOptimize(ufds_do_ops(N,ops));
+  }
+   
+  state.SetComplexityN(state.range(0)); 
 }
 
-static void BM_FOO2(benchmark::State &state) {
-  for (auto _ : state) benchmark::DoNotOptimize(foo2(state.range(0)));
-   state.SetComplexityN(state.range(0));
-}
-
-BENCHMARK(BM_FOO2)
-    ->RangeMultiplier(2)->Range(1<<0, 1<<13)->Complexity();
+BENCHMARK(BM_UDFS)
+    ->RangeMultiplier(4)->Range(1<<1, 1<<20)->Complexity();
     
-BENCHMARK(BM_FOO2)
-    ->RangeMultiplier(2)->Range(1<<0, 1<<13)->Complexity(benchmark::oAuto);
-    
-
-int foo3(int w) {
-    int k=0;
-    for (int i=0; i*i<w; i++) {
-        k += foo(w);
-    }
-    return k;
-}
-
-static void BM_FOO3(benchmark::State &state) {
-  for (auto _ : state) benchmark::DoNotOptimize(foo3(state.range(0)));
-   state.SetComplexityN(state.range(0));
-}
-
-BENCHMARK(BM_FOO3)
-    ->RangeMultiplier(2)->Range(1<<0, 1<<13)->Complexity();
-    
-BENCHMARK(BM_FOO3)
-    ->RangeMultiplier(2)->Range(1<<0, 1<<13)->Complexity([](int64_t n) { return ((double)n)*sqrt((double)n); });
+BENCHMARK(BM_UDFS)
+    ->RangeMultiplier(4)->Range(1<<1, 1<<20)->Complexity([](int64_t n) { return 8.5*((double)n); });

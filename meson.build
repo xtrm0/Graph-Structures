@@ -1,11 +1,13 @@
 project('fastnet', 'cpp',
   version : '1.0.0',
   license : 'MIT',
+  meson_version : '>= 0.47.0',
   default_options: [
     'cpp_std=c++17',
     'warning_level=3',
     'buildtype=release'
-  ])
+  ]
+)
 
 project_sources = []
 project_headers = []

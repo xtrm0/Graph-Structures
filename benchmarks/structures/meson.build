@@ -16,7 +16,7 @@ l_benchmark = executable('ufds_benchmark',
     dependencies : [l_benchmark_deps,benchmark_deps], 
     link_with : [l_benchmark_lib_deps, benchmark_dep_libs])
 
-benchmark('ufds benchmark', l_benchmark)
+benchmark('ufds benchmark', l_benchmark, timeout: 120)
 
 all_benchmark_deps += l_benchmark_deps
 all_benchmark_dep_libs += l_benchmark_lib_deps

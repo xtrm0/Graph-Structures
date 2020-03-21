@@ -150,6 +150,33 @@ matrix:
             git diff
             exit -1
           fi
+          
+    - name: "benchmarks"
+      env:
+        CXX=clang++-9
+        CC=clang-9
+        BUILD_TYPE=Debug
+      compiler: clang-9
+      addons:
+        apt:
+          packages:
+            - clang-9
+            - libc++-9-dev
+            - libc++abi-9-dev
+            - ninja-build
+            - python3-pip
+            - python3-setuptools
+            - build-essential
+            - libgtest-dev
+      script:
+        - mkdir build
+        - meson build 
+        - cd build
+        - ninja
+        - ninja test
+        - (ninja benchmark || (echo failed; cat meson-logs/benchmarklog.txt && exit 1)) && cat meson-logs/benchmarklog.txt
+        
+        
 
 
 before_install:
