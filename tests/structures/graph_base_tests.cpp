@@ -63,7 +63,7 @@ using GraphImplementations =
                      BGT_GEN<EdgeList, 2>, BGT_GEN<AdjacencyList, 2>,
                      BGT_GEN<AdjacencyMatrix, 2>, BGT_GEN<CSRGraph, 2> >;
 
-TYPED_TEST_CASE(BaseGraphTests, GraphImplementations);
+TYPED_TEST_SUITE(BaseGraphTests, GraphImplementations);
 
 template <class T>
 bool contains(const vector<T>& vec, const T& val, int start = 0);
