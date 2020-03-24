@@ -87,7 +87,7 @@ bool contains(const vector<NodeId>& vec, const NodeId& val, int start = 0) {
 }
 
 TYPED_TEST(BaseGraphTests, EmptyConstructor) {
-  using GraphType = typename TestFixture::GraphType;
+  TEST_HEADER();
 
   GraphType graph;
   ASSERT_EQ(graph.N, 0);

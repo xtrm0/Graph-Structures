@@ -1,10 +1,10 @@
 # Test compilation rules:
 l_test_sources = files(
-  'graph_base_tests.cpp'
+  'graph_base_tests.cpp',
+  'ufds_tests.cpp'
 )
 
 project_test_sources += l_test_sources
-
 gtest_structures = executable(
   'gtest_structures',
   [l_test_sources, test_main],
