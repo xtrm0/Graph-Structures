@@ -21,11 +21,11 @@ struct BGT_GEN {
 };
 
 template <class T>
-struct BaseGraphTests : public testing::Test {
+struct BaseGraphWTests : public testing::Test {
   typedef typename T::GraphType GraphType;
 
  protected:
-  BaseGraphTests() {
+  BaseGraphWTests() {
     switch (T::GraphSwitch) {
       case 0:
         N = 1;
@@ -36,14 +36,15 @@ struct BaseGraphTests : public testing::Test {
       case 1:
         N = 3;
         E = 9;
-        edges = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1},
-                 {1, 2}, {2, 0}, {2, 1}, {2, 2}};
+        edges = {{0, 0, 2}, {0, 1, 1}, {0, 2, 3}, {1, 0, 5}, {1, 1, 6},
+                 {1, 2, 1}, {2, 0, 7}, {2, 1, 9}, {2, 2, -4}};
         break;
 
       case 2:
         N = 5;
         E = 7;
-        edges = {{0, 4}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {3, 4}, {3, 3}};
+        edges = {{0, 4, 3},  {1, 2, 1},  {1, 3, 10000}, {1, 4, 42},
+                 {2, 3, 72}, {3, 4, 74}, {3, 3, -68}};
         break;
 
       default:
@@ -51,21 +52,17 @@ struct BaseGraphTests : public testing::Test {
     }
   }
 
-  vector<Edge> edges;
+  vector<EdgeW> edges;
   NodeId N;
   NodeId E;
 };
-using GraphImplementations =
-    ::testing::Types<BGT_GEN<EdgeList, 0>, BGT_GEN<AdjacencyList, 0>,
-                     BGT_GEN<AdjacencyMatrix, 0>, BGT_GEN<CSRGraph, 0>,
-                     BGT_GEN<EdgeList, 1>, BGT_GEN<AdjacencyList, 1>,
-                     BGT_GEN<AdjacencyMatrix, 1>, BGT_GEN<CSRGraph, 1>,
-                     BGT_GEN<EdgeList, 2>, BGT_GEN<AdjacencyList, 2>,
-                     BGT_GEN<AdjacencyMatrix, 2>, BGT_GEN<CSRGraph, 2> >;
+using GraphWImplementations =
+    ::testing::Types<BGT_GEN<EdgeListW, 0>, BGT_GEN<EdgeListW, 1>,
+                     BGT_GEN<EdgeListW, 2> >;
 
-TYPED_TEST_SUITE(BaseGraphTests, GraphImplementations);
+TYPED_TEST_SUITE(BaseGraphWTests, GraphWImplementations);
 
-TYPED_TEST(BaseGraphTests, EmptyConstructor) {
+TYPED_TEST(BaseGraphWTests, EmptyConstructor) {
   TEST_HEADER();
 
   GraphType graph;
@@ -75,7 +72,7 @@ TYPED_TEST(BaseGraphTests, EmptyConstructor) {
   ASSERT_EQ(graph.NodeCount(), 0);
 }
 
-TYPED_TEST(BaseGraphTests, Constructor) {
+TYPED_TEST(BaseGraphWTests, Constructor) {
   TEST_HEADER();
 
   GraphType graph;
@@ -86,12 +83,19 @@ TYPED_TEST(BaseGraphTests, Constructor) {
   EXPECT_EQ(graph.EdgeCount(), this->E);
   for (NodeId i = 0; i < this->N; i++) {
     for (NodeId j = 0; j < this->N; j++) {
-      EXPECT_EQ(graph.IsAdjacent(i, j), contains(this->edges, {i, j}));
+      EXPECT_EQ(graph.IsAdjacent(i, j), contains(this->edges, Edge{i, j}));
+    }
+  }
+  for (auto& e : this->edges) {
+    if (graph.IsAdjacent(e.u, e.v)) {
+      EXPECT_EQ(graph.GetWeight(e.u, e.v), e.w);
+    } else {
+      EXPECT_EQ(graph.GetWeight(e.u, e.v), WEIGHT_INVALID);
     }
   }
 }
 
-TYPED_TEST(BaseGraphTests, IsAdjacent) {
+TYPED_TEST(BaseGraphWTests, IsAdjacent) {
   TEST_HEADER();
 
   GraphType graph;
@@ -100,12 +104,39 @@ TYPED_TEST(BaseGraphTests, IsAdjacent) {
   EXPECT_EQ(graph.EdgeCount(), this->E);
   for (NodeId i = 0; i < this->N; i++) {
     for (NodeId j = 0; j < this->N; j++) {
-      EXPECT_EQ(graph.IsAdjacent(i, j), contains(this->edges, {i, j}));
+      EXPECT_EQ(graph.IsAdjacent(i, j), contains(this->edges, Edge{i, j}));
     }
   }
 }
 
-TYPED_TEST(BaseGraphTests, GetEdges) {
+TYPED_TEST(BaseGraphWTests, GetWeight) {
+  TEST_HEADER();
+
+  GraphType graph;
+  graph = GraphType(this->N, this->edges);
+  ASSERT_EQ(graph.NodeCount(), this->N);
+  EXPECT_EQ(graph.EdgeCount(), this->E);
+  for (NodeId i = 0; i < this->N; i++) {
+    for (NodeId j = 0; j < this->N; j++) {
+      EXPECT_EQ(graph.IsAdjacent(i, j), contains(this->edges, Edge{i, j}));
+    }
+  }
+  for (auto& e : this->edges) {
+    if (graph.IsAdjacent(e.u, e.v)) {
+      EXPECT_EQ(graph.GetWeight(e.u, e.v), e.w);
+    } else {
+      EXPECT_EQ(graph.GetWeight(e.u, e.v), WEIGHT_INVALID);
+    }
+  }
+
+  if (graph.IsAdjacent(0, 0)) {
+    EXPECT_NE(graph.GetWeight(0, 0), WEIGHT_INVALID);
+  } else {
+    EXPECT_EQ(graph.GetWeight(0, 0), WEIGHT_INVALID);
+  }
+}
+
+TYPED_TEST(BaseGraphWTests, GetEdges) {
   TEST_HEADER();
 
   GraphType graph;
@@ -113,7 +144,7 @@ TYPED_TEST(BaseGraphTests, GetEdges) {
   ASSERT_EQ(graph.NodeCount(), this->N);
   EXPECT_EQ(graph.EdgeCount(), this->E);
 
-  vector<Edge> graph_edges = graph.GetEdges();
+  vector<EdgeW> graph_edges = graph.GetEdges();
 
   // Check no repetitions:
   //
@@ -129,12 +160,19 @@ TYPED_TEST(BaseGraphTests, GetEdges) {
   //
   for (NodeId i = 0; i < this->N; i++) {
     for (NodeId j = 0; j < this->N; j++) {
-      EXPECT_EQ(graph.IsAdjacent(i, j), contains(graph_edges, {i, j}));
+      EXPECT_EQ(graph.IsAdjacent(i, j), contains(graph_edges, Edge{i, j}));
+    }
+  }
+  for (auto& e : graph_edges) {
+    if (graph.IsAdjacent(e.u, e.v)) {
+      EXPECT_EQ(graph.GetWeight(e.u, e.v), e.w);
+    } else {
+      EXPECT_EQ(graph.GetWeight(e.u, e.v), WEIGHT_INVALID);
     }
   }
 }
 
-TYPED_TEST(BaseGraphTests, GetNeighboors) {
+TYPED_TEST(BaseGraphWTests, GetNeighboors) {
   TEST_HEADER();
 
   GraphType graph;
@@ -143,7 +181,7 @@ TYPED_TEST(BaseGraphTests, GetNeighboors) {
   EXPECT_EQ(graph.EdgeCount(), this->E);
 
   for (NodeId i = 0; i < this->N; i++) {
-    vector<NodeId> graph_edges = graph.GetNeighboors(i);
+    vector<NeighW> graph_edges = graph.GetNeighboors(i);
 
     // Check no repetitions:
     //
@@ -155,11 +193,14 @@ TYPED_TEST(BaseGraphTests, GetNeighboors) {
     //
     for (NodeId j = 0; j < this->N; j++) {
       EXPECT_EQ(graph.IsAdjacent(i, j), contains(graph_edges, j));
+      if (graph.IsAdjacent(i, j)) {
+        EXPECT_TRUE(contains(graph_edges, NeighW{j, graph.GetWeight(i, j)}));
+      }
     }
   }
 }
 
-TYPED_TEST(BaseGraphTests, GetReverseNeighboors) {
+TYPED_TEST(BaseGraphWTests, GetReverseNeighboors) {
   TEST_HEADER();
 
   GraphType graph;
@@ -168,7 +209,7 @@ TYPED_TEST(BaseGraphTests, GetReverseNeighboors) {
   EXPECT_EQ(graph.EdgeCount(), this->E);
 
   for (NodeId i = 0; i < this->N; i++) {
-    vector<NodeId> graph_edges = graph.GetReverseNeighboors(i);
+    vector<NeighW> graph_edges = graph.GetReverseNeighboors(i);
 
     // Check no repetitions:
     //
@@ -180,6 +221,9 @@ TYPED_TEST(BaseGraphTests, GetReverseNeighboors) {
     //
     for (NodeId j = 0; j < this->N; j++) {
       EXPECT_EQ(graph.IsAdjacent(j, i), contains(graph_edges, j));
+      if (graph.IsAdjacent(j, i)) {
+        EXPECT_TRUE(contains(graph_edges, NeighW{j, graph.GetWeight(j, i)}));
+      }
     }
   }
 }

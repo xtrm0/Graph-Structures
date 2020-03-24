@@ -71,3 +71,18 @@ EdgeList ReadGraphAsEdgeList() {
   }
   return EdgeList(N, edges);
 }
+
+EdgeListW ReadGraphWAsEdgeListW() {
+  NodeId N, E;
+  vector<EdgeW> edges;
+  cin >> N >> E;
+  for (NodeId i = 0; i < E; i++) {
+    NodeId a, b;
+    WeightType c;
+    cin >> a >> b >> c;
+    a--;
+    b--;
+    edges.push_back({a, b, c});
+  }
+  return EdgeListW(N, edges);
+}

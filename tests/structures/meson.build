@@ -1,7 +1,10 @@
 # Test compilation rules:
 l_test_sources = files(
   'graph_base_tests.cpp',
-  'ufds_tests.cpp'
+  'graph_base_tests_w.cpp',
+  'ufds_tests.cpp',
+  
+  'test_utils.cpp'
 )
 
 project_test_sources += l_test_sources
