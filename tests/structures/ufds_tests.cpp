@@ -21,7 +21,7 @@ struct UFDS_Base_Test : public testing::Test {
  protected:
   UFDS_Base_Test() {}
 };
-using UFDSImplementations = ::testing::Types<DisjointSet>;
+using UFDSImplementations = ::testing::Types<DisjointSet, UndoableDisjointSet>;
 
 TYPED_TEST_SUITE(UFDS_Base_Test, UFDSImplementations);
 

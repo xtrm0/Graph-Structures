@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <list>
+#include <stack>
 #include <vector>
 using namespace std;
 

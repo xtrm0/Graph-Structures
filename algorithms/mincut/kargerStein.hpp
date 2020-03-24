@@ -10,58 +10,66 @@ using namespace std;
 //
 
 static uint64_t Contract(vector<Edge>& edges, uint64_t N, uint64_t E,
-                         DisjointSet& ds, uint64_t comp) {
-  // Shuffle the array
-  // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-  // for i from 0 to n−2 do
-  for (uint64_t i = 0; i < E - 1; i++) {
-    // j ← random integer such that i ≤ j < n
-    uint64_t j = (rand() % (E - i - 1)) + i;
-    if (i != j) swap(edges[i], edges[j]);  // exchange a[i] and a[j]
-  }
-
+                         UndoableDisjointSet& ds, uint64_t comp,
+                         uint64_t& currentI) {
   // Run compression
   uint64_t components = N;
 
-  for (uint64_t i = 0; i < E && components > comp; i++) {
-    if (ds.AreConnected(edges[i].u, edges[i].v)) continue;
+  for (; currentI < E && components > comp; currentI++) {
+    // Pick a random edge in edges[currentI, E]
+    uint64_t j = currentI + (rand() % (E - currentI - 1));
+    swap(edges[currentI], edges[j]);
+    // swap with edge at index currentI
+    if (ds.AreConnected(edges[currentI].u, edges[currentI].v)) continue;
     // not connected
     components--;
-    ds.Union(edges[i].u, edges[i].v);
+    ds.Union(edges[currentI].u, edges[currentI].v);
   }
 
   // components == comp
   uint64_t cut = 0;
-  for (uint64_t i = 0; i < E; i++) {
-    if (ds.AreConnected(edges[i].u, edges[i].v)) continue;
-    // not connected
-    cut++;
+
+  if (comp == 2) {
+    for (uint64_t i = 0; i < E; i++) {
+      if (ds.AreConnected(edges[i].u, edges[i].v)) continue;
+      // not connected
+      cut++;
+    }
   }
 
   return cut;
 }
 
-static uint64_t FastMinCut(vector<Edge>& input, int N, int E, DisjointSet& ds) {
+static uint64_t FastMinCut(vector<Edge>& input, uint64_t N, uint64_t E,
+                           UndoableDisjointSet& ds, uint64_t currentI) {
   if (N < 6) {
-    return Contract(input, N, E, ds, 2);
+    uint64_t ret = Contract(input, N, E, ds, 2, currentI);
+    cout << ret << endl;
+    return ret;
   }
 
   uint64_t ret = E + 1;
   uint64_t t = 1 + (N * 100000 / 141421);
 
-  DisjointSet ds1 = ds;
-  CalcMinCut(input, N, E, ds, t);
-  ret = FastMinCut(input, t, E, ds1);
-  ds1 = ds;
-  CalcMinCut(input, N, E, ds, t);
-  ret = min(ret, FastMinCut(input, t, E, ds1));
+  uint64_t updateableI;
+  updateableI = currentI;
+  ds.SaveState();
+  Contract(input, N, E, ds, t, updateableI);
+  ret = FastMinCut(input, t, E, ds, updateableI);
+  ds.RestoreState();
+  ds.SaveState();
+  updateableI = currentI;
+  Contract(input, N, E, ds, t, updateableI);
+  ret = min(ret, FastMinCut(input, t, E, ds, updateableI));
+  ds.RestoreState();
+
   return ret;
 }
 
 // Probabilistic algorithm for mincut, implementation can be improved
 //
-// Time: O(N (N+E) log^2 N)
-// Space: O(N^(3/2)+E)
+// Time: O((N+E) log^2 N alpha(N))
+// Space: O(N+E alpha(N))
 // UNDONE: make time and space bounds better
 //
 uint64_t KargerStein(EdgeList& Graph) {
@@ -82,8 +90,8 @@ uint64_t KargerStein(EdgeList& Graph) {
   uint64_t runs = log * log + 2;
 
   for (uint64_t i = 0; i < runs; i++) {
-    DisjointSet ds = DisjointSet(N);
-    mincut = std::min(mincut, FastMinCut(edges, N, E, ds));
+    UndoableDisjointSet ds = UndoableDisjointSet(N);
+    mincut = std::min(mincut, FastMinCut(edges, N, E, ds, 0));
   }
 
   return mincut;

@@ -4,7 +4,8 @@ using std::cout;
 using std::endl;
 
 int main() {
-  EdgeList graph = ReadGraphAsEdgeList();
+  EdgeList graph = EdgeList(
+      4, {{0, 2}, {0, 3}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}});
 
   int mincut = KargerStein(graph);
 
