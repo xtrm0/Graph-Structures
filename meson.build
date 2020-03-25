@@ -28,6 +28,7 @@ endif
 
 add_global_arguments('-Wall', '-Wextra', '-Wunused',
                      '-Werror', '-O3', '-Ofast',
+                     #'-g',
                      # UNDONE: upgrade to packages or create source files
                      '-Wno-missing-declarations',
                      libs_compiler,

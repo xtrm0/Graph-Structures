@@ -1,1 +1,3 @@
 subdir('mincut')
+subdir('mst')
+

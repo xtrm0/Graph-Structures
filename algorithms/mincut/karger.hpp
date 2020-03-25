@@ -6,8 +6,8 @@ using namespace std;
 // UNDONE: decide between modules or moving this to a .cpp
 //
 
-static uint64_t CalcMinCut(vector<Edge>& edges, uint64_t N, uint64_t E,
-                           DisjointSet& ds, uint64_t comp) {
+static uint64_t CalcMinCut(vector<Edge>& edges, uint64_t E, DisjointSet& ds,
+                           uint64_t comp) {
   // Shuffle the array
   // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
   // for i from 0 to n−2 do
@@ -17,20 +17,16 @@ static uint64_t CalcMinCut(vector<Edge>& edges, uint64_t N, uint64_t E,
     if (i != j) swap(edges[i], edges[j]);  // exchange a[i] and a[j]
   }
 
-  // Run compression
-  uint64_t components = N;
-
-  for (uint64_t i = 0; i < E && components > comp; i++) {
-    if (ds.AreConnected(edges[i].u, edges[i].v)) continue;
+  for (uint64_t i = 0; i < E && ds.components > comp; i++) {
+    if (ds.AreConnected(edges[i].u + 1, edges[i].v + 1)) continue;
     // not connected
-    components--;
-    ds.Union(edges[i].u, edges[i].v);
+    ds.Union(edges[i].u + 1, edges[i].v + 1);
   }
 
   // components == comp
   uint64_t cut = 0;
   for (uint64_t i = 0; i < E; i++) {
-    if (ds.AreConnected(edges[i].u, edges[i].v)) continue;
+    if (ds.AreConnected(edges[i].u + 1, edges[i].v + 1)) continue;
     // not connected
     cut++;
   }
@@ -60,7 +56,7 @@ uint64_t Karger(EdgeList& Graph) {
 
   for (uint64_t i = 0; i < runs; i++) {
     DisjointSet ds = DisjointSet(N);
-    mincut = std::min(mincut, CalcMinCut(edges, N, E, ds, 2));
+    mincut = std::min(mincut, CalcMinCut(edges, E, ds, 2));
   }
 
   return mincut;

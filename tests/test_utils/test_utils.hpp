@@ -14,3 +14,10 @@
       GTEST_FATAL_FAILURE_("       timed out (> " #secs                 \
                            " seconds). Check code for infinite loops"); \
   }
+
+#define SEED_RAND()                   \
+  {                                   \
+    auto seed = time(0);              \
+    cout << "SEED: " << seed << endl; \
+    srand(seed);                      \
+  }

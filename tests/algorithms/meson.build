@@ -1,6 +1,7 @@
 # Test compilation rules:
 l_test_sources = files(
-  'mincut.cpp'
+  'mincut.cpp',
+  'mst.cpp'
 )
 
 project_test_sources += l_test_sources
