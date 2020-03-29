@@ -1,7 +1,7 @@
 #pragma once
 #include "karger.hpp"
 #include "structures/graph/edge_list.hpp"
-#include "structures/succinct/ufds.hpp"
+#include "structures/ufds/undoable_disjoint_set.hpp"
 using namespace std;
 
 // UNDONE: decide between modules or moving this to a .cpp

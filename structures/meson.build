@@ -1,3 +1,5 @@
 subdir('baseutils')
 subdir('graph')
+#subdir('heaps')
 subdir('succinct')
+subdir('ufds')

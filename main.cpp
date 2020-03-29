@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "algorithms/mst/boruvka.hpp"
 #include "structures/graph/edge_list.hpp"
-#include "structures/succinct/ufds.hpp"
+#include "structures/ufds/disjoint_set.hpp"
 using namespace std;
 
 int main() {

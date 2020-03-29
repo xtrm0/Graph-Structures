@@ -1,4 +1,6 @@
-#include "structures/succinct/ufds.hpp" 
+#include "structures/ufds/disjoint_set_simple.hpp"
+#include "structures/ufds/disjoint_set.hpp"
+#include "structures/ufds/undoable_disjoint_set.hpp"
 #include "benchmark/benchmark.h"
 #include "benchmarks/util/benchmark_assertions.hpp"
 #include <math.h>

@@ -1,6 +1,6 @@
 #pragma once
 #include "structures/graph/edge_list.hpp"
-#include "structures/succinct/ufds.hpp"
+#include "structures/ufds/disjoint_set.hpp"
 using namespace std;
 
 // UNDONE: decide between modules or moving this to a .cpp

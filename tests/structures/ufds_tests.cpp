@@ -3,7 +3,9 @@
 #include "structures/graph/adjacency_matrix.hpp"
 #include "structures/graph/compressed_sparse_rows.hpp"
 #include "structures/graph/edge_list.hpp"
-#include "structures/succinct/ufds.hpp"
+#include "structures/ufds/disjoint_set.hpp"
+#include "structures/ufds/disjoint_set_simple.hpp"
+#include "structures/ufds/undoable_disjoint_set.hpp"
 
 #include "tests/test_utils/test_utils.hpp"
 
